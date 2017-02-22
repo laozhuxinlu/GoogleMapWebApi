@@ -17,8 +17,25 @@
 <h1>This is a demo for Google Map API</h1>
 
 <div>Search:
-<input style="width:400px;height:40px" id='searchInput' type="text" placeholder="请输入你的收货地址（写字楼，小区，街道或者学校）" 
-		 onfocus="focusInput(this.id)" oninput="changeInput(this.id)"></input>
+	<input id='searchInput' style="width:400px;height:40px" type="text" 
+			placeholder="请输入你的收货地址（写字楼，小区，街道或者学校）" 
+			onfocus="focusInput(this.id)" oninput="changeInput(this.id)"></input>
+	<select id="countryChoice" style="width:150px;height:40px;" onchange="setAutocompleteCountry(this.id)">
+		<option value="all">All</option>
+        <option value="au">Australia</option>
+        <option value="br">Brazil</option>
+        <option value="ca">Canada</option>
+        <option value="fr">France</option>
+        <option value="de">Germany</option>
+        <option value="mx">Mexico</option>
+        <option value="nz">New Zealand</option>
+        <option value="it">Italy</option>
+        <option value="za">South Africa</option>
+        <option value="es">Spain</option>
+        <option value="pt">Portugal</option>
+        <option value="us" selected>U.S.A.</option>
+        <option value="uk">United Kingdom</option>
+      </select>
 </div>
 
 <p id="showInput">Test</p>
@@ -27,7 +44,8 @@
 	<input type="button" style="width:100px;height:40px;" value="Button" onclick="buttonClick()"></input>
 </div>
 
-<div id="map" style="width:500px;height:380px;"></div>
+<!-- <div id="map" style="width:500px;height:380px;"></div> -->
+<div id="map"></div>
 
 </body>
 </html>
