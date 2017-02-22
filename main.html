@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>This is a demo</title>
+<meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8">
+<!-- <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDWNvTwzZoik59YpIkN9gcOVilD5gL7n9E&sensor=false">
+</script> -->
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDWNvTwzZoik59YpIkN9gcOVilD5gL7n9E&libraries=places" async defer></script>
+
+<script type="text/javascript" src="main.js">
+</script>
+
+</head>
+<body onload="bodyInit()">
+
+<h1>This is a demo for Google Map API</h1>
+
+
+<div>Search:
+<input style="width:400px;height:40px" id='searchInput' type="text" placeholder="请输入你的收货地址（写字楼，小区，街道或者学校）" 
+		 onfocus="focusInput(this.id)" oninput="changeInput(this.id)"></input>
+
+</div>
+
+
+
+<p id="showInput">Test</p>
+
+<input type="button" style="width:100px;height:40px;" value="Button" onclick="buttonClick()"></input>
+
+
+<div id="map" style="width:500px;height:380px;"></div>
+
+</body>
+</html>
+
