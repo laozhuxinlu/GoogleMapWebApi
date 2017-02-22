@@ -14,9 +14,7 @@ if (searchID.value == "Please input a please")
 }
 
 function changeInput() {
-
-messageShow.innerHTML = searchID.value;
-
+	messageShow.innerHTML = searchID.value;
 }
 
 function buttonClick(){
@@ -28,7 +26,6 @@ function buttonClick(){
 
 function getPossion() {
 	// body...
-
 	if(navigator.geolocation){
 		console.log("Clay:: navigation.geolocation");
 		var opt = {
@@ -44,16 +41,14 @@ function getPossion() {
 }
 
 function successPos(pos){
-console.log("Clay:: Lat " + pos.coords.latitude);
-console.log("Clay:: Log " + pos.coords.longitude);
-messageShow.innerHTML = 'Lat: ' + pos.coords.latitude + '; Log: ' + pos.coords.longitude;
+	console.log("Clay:: Lat " + pos.coords.latitude);
+	console.log("Clay:: Log " + pos.coords.longitude);
+	messageShow.innerHTML = 'Lat: ' + pos.coords.latitude + '; Log: ' + pos.coords.longitude;
 }
 
 function errorPos(err){
-
-console.log("Clay:: Error --> " + err.message);
+	console.log("Clay:: Error --> " + err.message);
 }
-
 
 function findNearPlace() {
 	// body...
@@ -65,26 +60,39 @@ function findNearPlace() {
 
 	var service = new google.maps.places.PlacesService(map);
 	
+	//more requice details from: service.nearbySearch.makefile
 	var request = {
 			location: pyrmont,
         	radius: 1000,
         	type: ['food']
 	};
         service.nearbySearch(request, findPlaceCallback);
-
-        //more details from: service.nearbySearch.makefile
 }
 
 function findPlaceCallback(results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
         for (var i = 0; i < results.length; i++) {
         	//more details form: results[i].makefile
+        	//createMarker(results[i]);  // create the marker on map
         	console.log("Clay:: " + results[i].name);
-        	//console.log("Clay:: " + results[i]);
             //ShowTheObject(results[i]);
           }
         }
     }
+
+function createMarker(place) {
+    var placeLoc = place.geometry.location;
+    console.log("Clay:: placeName --> " + place.name);
+    var marker = new google.maps.Marker({
+          map: map,
+          position: place.geometry.location
+    	});
+
+    google.maps.event.addListener(marker, 'click', function() {
+        infowindow.setContent(place.name);
+        infowindow.open(map, this);
+    });
+}
 
 function ShowTheObject(obj){  
     var des = "";  
