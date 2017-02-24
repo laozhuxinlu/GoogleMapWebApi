@@ -16,12 +16,10 @@
 
 <h1>This is a demo for Google Map API</h1>
 
-<div>Search:
-	<input id='searchInput' style="width:400px;height:40px" type="text" 
-			placeholder="请输入你的收货地址（写字楼，小区，街道或者学校）" 
-			onfocus="focusInput(this.id)" oninput="changeInput(this.id)"></input>
-	<select id="countryChoice" style="width:150px;height:40px;" onchange="setAutocompleteCountry(this.id)">
-		<option value="all">All</option>
+<div >Country Choice:
+       <select id="countryChoice" style="width:150px;height:40px;" onchange="setAutocompleteCountry(this.id)">
+        <option value="all">All</option>
+        <option value="cn" selected>China</option>
         <option value="au">Australia</option>
         <option value="br">Brazil</option>
         <option value="ca">Canada</option>
@@ -33,16 +31,57 @@
         <option value="za">South Africa</option>
         <option value="es">Spain</option>
         <option value="pt">Portugal</option>
-        <option value="us" selected>U.S.A.</option>
+        <option value="us">U.S.A.</option>
         <option value="uk">United Kingdom</option>
       </select>
 </div>
 
-<p id="showInput">Test</p>
+<div style="margin-top: 30px">City Choice:
+    <input id="cityChoice" style="width:400px;height:40px;margin-left:25px" 
+           type="text"placeholder="请输入你要选择的城市"></input>
+</div>
+
+<div style="margin-top: 30px">Place Choice:
+    <input id="placeChoice" style="width:400px;height:40px;margin-left:20px" 
+           type="text"placeholder="请输入你的收货地址（写字楼，小区，街道或者学校）"></input>
+</div>
+
+<div style="margin-top: 30px">The Information What You Need:
+    <p id="placeDetail" style="margin-left:20px" type="text">...</p>
+</div>
+
+
+
+<!-- ################################################################################ -->
+<div style="margin-top: 30px"> Test API</div>
+<div>*************************************************************************</div>
+<div >Autocomplete Search:
+	<input id='searchInput1' style="width:400px;height:40px" type="text" 
+			placeholder="请输入你的收货地址（写字楼，小区，街道或者学校）" 
+			onfocus="focusInput(this.id)" oninput="changeInput1(this.id)"></input>
+</div>
+</br>
+<div>SearchBox Search:
+    <input id="searchInput2" style="width:400px;height:40px;margin-left:20px" 
+           type="text"placeholder="请输入你的收货地址（写字楼，小区，街道或者学校）"></input>
+</div>
+</br>
+<div>AutocompleteService:
+    <input id="searchInput3" style="width:400px;height:40px;" 
+           type="text"placeholder="请输入你的收货地址（写字楼，小区，街道或者学校）"
+           oninput="changeInput3()"></input>
+</div>
 
 <div>
-	<input type="button" style="width:100px;height:40px;" value="Button" onclick="buttonClick()"></input>
+    <input type="button" style="width:100px;height:40px;margin-top:30px" value="Button" onclick="buttonClick()"></input>
 </div>
+
+
+<div style="margin-top:30px"> Result:  
+    <p id="showInput">Test</p>
+</div>
+
+
 
 <!-- <div id="map" style="width:500px;height:380px;"></div> -->
 <div id="map"></div>

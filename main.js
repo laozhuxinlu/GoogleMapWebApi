@@ -1,11 +1,85 @@
+//country list
+var countries = {
+  'cn': {
+    center: {lat: 32.1, lng: 105.5},
+    zoom: 5
+  },
+  'au': {
+    center: {lat: -25.3, lng: 133.8},
+    zoom: 4
+  },
+  'br': {
+    center: {lat: -14.2, lng: -51.9},
+    zoom: 3
+  },
+  'ca': {
+    center: {lat: 62, lng: -110.0},
+    zoom: 3
+  },
+  'fr': {
+    center: {lat: 46.2, lng: 2.2},
+    zoom: 5
+  },
+  'de': {
+    center: {lat: 51.2, lng: 10.4},
+    zoom: 5
+  },
+  'mx': {
+    center: {lat: 23.6, lng: -102.5},
+    zoom: 4
+  },
+  'nz': {
+    center: {lat: -40.9, lng: 174.9},
+    zoom: 5
+  },
+  'it': {
+    center: {lat: 41.9, lng: 12.6},
+    zoom: 5
+  },
+  'za': {
+    center: {lat: -30.6, lng: 22.9},
+    zoom: 5
+  },
+  'es': {
+    center: {lat: 40.5, lng: -3.7},
+    zoom: 5
+  },
+  'pt': {
+    center: {lat: 39.4, lng: -8.2},
+    zoom: 6
+  },
+  'us': {
+    center: {lat: 37.1, lng: -95.7},
+    zoom: 3
+  },
+  'uk': {
+    center: {lat: 54.8, lng: -4.6},
+    zoom: 5
+  }
+};
+
+var countryRestrict = {'country': 'cn'};
+
+var cityRestrict = {lat: 31.50, lng: 121.43};   //ShangHai
+
+document.getElementById();
+
+function setAutocompleteCountry() {
+  // body...
+  var country = document.getElementById('countryChoice').value;
+  countryRestrict = {'country': country };
+
+}
+
 
 var searchID;
 var messageShow;
 
 function bodyInit() {
-	searchID = document.getElementById("searchInput");
+	searchID = document.getElementById("searchInput1");
 	messageShow = document.getElementById("showInput");
-	mapInit();
+	mapInit_Autocomplete();
+  mapInit_SearchBox();
 }
 
 
@@ -14,7 +88,7 @@ if (searchID.value == "Please input a please")
 	searchID.value = "";
 }
 
-function changeInput() {
+function changeInput1() {
 	setShowmessage(searchID.value);
 }
 
@@ -113,77 +187,13 @@ function ShowTheObject(obj){
     console.log("Clay:: object --> " + des);
 }  
 
-//search box by Autocomplete
 
-//choice counrty:
-var countries = {
-  'au': {
-    center: {lat: -25.3, lng: 133.8},
-    zoom: 4
-  },
-  'br': {
-    center: {lat: -14.2, lng: -51.9},
-    zoom: 3
-  },
-  'ca': {
-    center: {lat: 62, lng: -110.0},
-    zoom: 3
-  },
-  'fr': {
-    center: {lat: 46.2, lng: 2.2},
-    zoom: 5
-  },
-  'de': {
-    center: {lat: 51.2, lng: 10.4},
-    zoom: 5
-  },
-  'mx': {
-    center: {lat: 23.6, lng: -102.5},
-    zoom: 4
-  },
-  'nz': {
-    center: {lat: -40.9, lng: 174.9},
-    zoom: 5
-  },
-  'it': {
-    center: {lat: 41.9, lng: 12.6},
-    zoom: 5
-  },
-  'za': {
-    center: {lat: -30.6, lng: 22.9},
-    zoom: 5
-  },
-  'es': {
-    center: {lat: 40.5, lng: -3.7},
-    zoom: 5
-  },
-  'pt': {
-    center: {lat: 39.4, lng: -8.2},
-    zoom: 6
-  },
-  'us': {
-    center: {lat: 37.1, lng: -95.7},
-    zoom: 3
-  },
-  'uk': {
-    center: {lat: 54.8, lng: -4.6},
-    zoom: 5
-  }
-};
-
-function setAutocompleteCountry(argument) {
-	// body...
-	var country = document.getElementById('countryChoice').value;
-	var aCenter = countries[country].center;
-	var aZoom = countries[country].zoom;
-
-}
 
 //Autocomplete
 var autocomplete;
-//var countryRestrict = {'country': 'us'};
-var countryRestrict = {'country': 'cn'};
-function mapInit() {
+//var countryLimited = {'country': 'us'};
+var countryLimited = {'country': 'cn'};
+function mapInit_Autocomplete() {
 	// body...
 	var defaultBounds = new google.maps.LatLngBounds(
   	new google.maps.LatLng(-33.8902, 151.1759),
@@ -191,10 +201,10 @@ function mapInit() {
 
 	autocomplete = new google.maps.places.Autocomplete(
     /** @type {!HTMLInputElement} */ (
-      document.getElementById('searchInput')), {
+      document.getElementById('searchInput1')), {
       bounds: defaultBounds,
       types: ['(cities)'],
-      componentRestrictions: countryRestrict
+      componentRestrictions: countryLimited
     });
 	//if you choice a please, will run onPlaceChanged()
     autocomplete.addListener('place_changed', onPlaceChanged);
@@ -208,6 +218,97 @@ function onPlaceChanged() {
 	console.log("Clay:: onPlaceChanged");
 
 }
+
+//SearchBox
+var input;
+var searchBox;
+
+function mapInit_SearchBox() {
+  // body...
+  var defaultBounds = new google.maps.LatLngBounds(
+    new google.maps.LatLng(-33.8902, 151.1759),
+    new google.maps.LatLng(-33.8474, 151.2631));
+
+  input = document.getElementById('searchInput2');
+
+  searchBox = new google.maps.places.SearchBox(input, {
+    //bounds: defaultBounds
+  });
+
+}
+
+//AutocompleteService
+function mapInit_AutocompleteService(suggestMsg) {
+  var displaySuggestions = function(predictions, status) {
+    if (status != google.maps.places.PlacesServiceStatus.OK) {
+      console.log(status);
+      return;
+    }
+  var getall = '';
+    predictions.forEach(function(prediction) {
+      // var li = document.createElement('li');
+      // li.appendChild(document.createTextNode(prediction.description));
+      // document.getElementById('showInput').appendChild(li);
+      getall = getall + '<br />' +  prediction.description;
+    });
+    setShowmessage(getall);
+  };
+
+  var service = new google.maps.places.AutocompleteService();
+  var myLatLng = new google.maps.LatLng({lat: 31.202, lng: 121.587}); 
+  var searchObj = {
+    input: suggestMsg,
+  }
+  service.getQueryPredictions(searchObj, displaySuggestions);
+}
+
+function mapInit_AutocompleteService2(suggestMsg) {
+  var displaySuggestions = function(predictions, status) {
+    if (status != google.maps.places.PlacesServiceStatus.OK) {
+      console.log(status);
+      return;
+    }
+  var getall = '';
+    predictions.forEach(function(prediction) {
+      // var li = document.createElement('li');
+      // li.appendChild(document.createTextNode(prediction.description));
+      // document.getElementById('showInput').appendChild(li);
+      getall = getall + '<br />' +  prediction.description;
+    });
+    setShowmessage(getall);
+  };
+
+  var service = new google.maps.places.AutocompleteService();
+  var myLatLng = new google.maps.LatLng({lat: 31.202, lng: 121.587}); //zhangjianggaoke
+  // var myLatLng = new google.maps.LatLng({lat: 31.52, lng: 117.17}); //hefei
+  // var myLatLng = new google.maps.LatLng({lat: 28.47, lng: 117.97}); //shangrao
+  var searchObj = {
+    input: suggestMsg,
+    componentRestrictions: countryLimited,  //限制国家
+    location: myLatLng,                      
+    radius: 500,
+    // types: ["establishment"]
+    // types: ["geocode"]
+    // types: ['(cities)']
+    // types: ['(regions)']
+    types: ['establishment']
+  }
+  service.getPlacePredictions(searchObj, displaySuggestions);
+}
+
+function changeInput3() {
+  // body...
+  if(document.getElementById('searchInput3').value){
+    //mapInit_AutocompleteService(document.getElementById('searchInput3').value);
+  mapInit_AutocompleteService2(document.getElementById('searchInput3').value);
+  }
+  
+
+}
+
+
+
+
 
 
 
