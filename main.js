@@ -58,24 +58,113 @@ var countries = {
   }
 };
 
-var countryRestrict = {'country': 'cn'};
+var countryRestrict;
+var placeBoundsRestrict;
+var restaurantRestrict;
 
-var cityRestrict = {lat: 31.50, lng: 121.43};   //ShangHai
+var autocomplete_city;
+var autocomplete_place;
 
-document.getElementById();
+var showDetails;
 
 function setAutocompleteCountry() {
   // body...
   var country = document.getElementById('countryChoice').value;
   countryRestrict = {'country': country };
-
+  showDetails.innerHTML = document.getElementById('countryChoice').value;
+  autocomplete_city.setComponentRestrictions(countryRestrict);
+  autocomplete_place.setComponentRestrictions(countryRestrict);
+  document.getElementById('cityChoice').value='';
+  document.getElementById('placeChoice').value='';
 }
 
+function cityChoiceChanged() {
+  // body...
+  var cityPlace = autocomplete_city.getPlace();
+  placeBoundsRestrict = cityPlace.geometry.viewport;
+  autocomplete_place.setBounds(placeBoundsRestrict);
+  document.getElementById('placeChoice').value='';
+}
 
-var searchID;
-var messageShow;
+function placeChoiceChanged() {
+  // body...
+  var suggestPlace = autocomplete_place.getPlace();
+  var myLimitLatLng = String(suggestPlace.geometry.location);
+  var regex="\\((.+?)\\)";
+  var arr=myLimitLatLng.match(regex);
+  var LaLn = arr[1];
+  var myLat = parseFloat(LaLn.split(',')[0]);
+  var myLng = parseFloat(LaLn.split(',')[1]);
+  restaurantRestrict = {lat: myLat, lng: myLng};
+  findNearRestaurant();
+}
+
+function findNearRestaurant() {
+  // body...
+  var map = new google.maps.Map(document.getElementById('map'), {
+    center: restaurantRestrict
+        });
+
+  var service = new google.maps.places.PlacesService(map);
+  
+  //more requice details from: service.nearbySearch.makefile
+  var request = {
+      location: restaurantRestrict,
+          radius: 5000,
+          type: ['food']
+  };
+    service.nearbySearch(request, findRestaurantCallback);
+}
+
+function findRestaurantCallback(results, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+        showDetails.innerHTML = '';
+        for (var i = 0; i < results.length; i++) {
+          showRestaurMessage(i+1 + ': ' + results[i].name + '  [' + results[i].vicinity + ']');
+          }
+        }
+}
+
+function showRestaurMessage(msg) {
+  // body...
+  showDetails.innerHTML = showDetails.innerHTML + '<br />' + msg;
+}
 
 function bodyInit() {
+
+  console.log('Clay:: bodyInit');
+  document.getElementById('cityChoice').value='';
+  document.getElementById('placeChoice').value='';
+
+  countryRestrict = {'country': 'cn'};  //china
+  placeBoundsRestrict = new google.maps.LatLngBounds(
+    new google.maps.LatLng(30.7798012, 120.83970669999997),
+    new google.maps.LatLng(31.6688967, 122.1137989)); //shanghai
+
+  restaurantRestrict = {lat: 31.202, lng: 121.587}; //zhangjianggaoke
+
+  showDetails = document.getElementById('placeDetail');
+
+//city
+  autocomplete_city = new google.maps.places.Autocomplete((
+      document.getElementById('cityChoice')), {
+      types: ['(cities)'],
+      componentRestrictions: countryRestrict
+    });
+  autocomplete_city.addListener('place_changed', cityChoiceChanged);
+
+//place
+  var searchObj = {
+    bounds: placeBoundsRestrict,
+    componentRestrictions: countryRestrict,
+    types: ['geocode']
+  }
+  autocomplete_place = new google.maps.places.Autocomplete((
+      document.getElementById('placeChoice')), searchObj);
+  autocomplete_place.addListener('place_changed', placeChoiceChanged);
+
+// API TEST
+//#####################################################################
 	searchID = document.getElementById("searchInput1");
 	messageShow = document.getElementById("showInput");
 	mapInit_Autocomplete();
@@ -83,23 +172,17 @@ function bodyInit() {
 }
 
 
+var searchID;
+var messageShow;
+
 function focusInput() {
 if (searchID.value == "Please input a please")
 	searchID.value = "";
 }
 
 function changeInput1() {
-	setShowmessage(searchID.value);
-}
-
-function setShowmessage(msg) {
-	// body...
-	messageShow.innerHTML = msg;
-}
-
-function addShowmessage(msg) {
-	// body...
-	messageShow.innerHTML = messageShow.innerHTML + '<br />' + msg;
+  // setShowmessage(searchID.value);
+	setShowmessage(document.getElementById('searchInput1').innerHTML);
 }
 
 function buttonClick(){
@@ -148,7 +231,7 @@ function findNearPlace() {
 	var request = {
 			location: pyrmont,
         	radius: 1000,
-        	type: ['food']
+        	type: ['food','school']
 	};
     service.nearbySearch(request, findPlaceCallback);
 }
@@ -179,31 +262,29 @@ function createMarker(place) {
     });
 }
 
-function ShowTheObject(obj){  
-    var des = "";  
-        for(var name in obj){  
-        des += name + ":" + obj[name] + ";";  
-         }  
-    console.log("Clay:: object --> " + des);
-}  
-
-
-
+//################################################################################
 //Autocomplete
 var autocomplete;
+var autocomplete1;
 //var countryLimited = {'country': 'us'};
 var countryLimited = {'country': 'cn'};
+
 function mapInit_Autocomplete() {
 	// body...
-	var defaultBounds = new google.maps.LatLngBounds(
-  	new google.maps.LatLng(-33.8902, 151.1759),
-  	new google.maps.LatLng(-33.8474, 151.2631));
+  //((30.7798012, 120.83970669999997), (31.6688967, 122.1137989)); SHANGHAI
+  	// var defaultBounds = new google.maps.LatLngBounds(
+   //    new google.maps.LatLng(30.7798012, 120.83970669999997),
+   //    new google.maps.LatLng(31.6688967, 122.1137989));  //shanghai
+    var defaultBounds = new google.maps.LatLngBounds(
+    	new google.maps.LatLng(31.7164494, 117.1183777),
+    	new google.maps.LatLng(31.9945999, 117.45414729999993));   //hefei
 
 	autocomplete = new google.maps.places.Autocomplete(
     /** @type {!HTMLInputElement} */ (
       document.getElementById('searchInput1')), {
       bounds: defaultBounds,
-      types: ['(cities)'],
+      // types: ['(cities)'],
+      types: ['geocode'],
       componentRestrictions: countryLimited
     });
 	//if you choice a please, will run onPlaceChanged()
@@ -216,9 +297,8 @@ function onPlaceChanged() {
 	ShowTheObject(place);
 	//setShowmessage(place);
 	console.log("Clay:: onPlaceChanged");
-
 }
-
+//#############################################################################
 //SearchBox
 var input;
 var searchBox;
@@ -226,17 +306,17 @@ var searchBox;
 function mapInit_SearchBox() {
   // body...
   var defaultBounds = new google.maps.LatLngBounds(
-    new google.maps.LatLng(-33.8902, 151.1759),
-    new google.maps.LatLng(-33.8474, 151.2631));
+    new google.maps.LatLng(30.7798012, 120.83970669999997),
+    new google.maps.LatLng(31.6688967, 122.1137989));
 
   input = document.getElementById('searchInput2');
 
   searchBox = new google.maps.places.SearchBox(input, {
-    //bounds: defaultBounds
+    bounds: defaultBounds
   });
 
 }
-
+//############################################################################
 //AutocompleteService
 function mapInit_AutocompleteService(suggestMsg) {
   var displaySuggestions = function(predictions, status) {
@@ -246,9 +326,6 @@ function mapInit_AutocompleteService(suggestMsg) {
     }
   var getall = '';
     predictions.forEach(function(prediction) {
-      // var li = document.createElement('li');
-      // li.appendChild(document.createTextNode(prediction.description));
-      // document.getElementById('showInput').appendChild(li);
       getall = getall + '<br />' +  prediction.description;
     });
     setShowmessage(getall);
@@ -270,23 +347,21 @@ function mapInit_AutocompleteService2(suggestMsg) {
     }
   var getall = '';
     predictions.forEach(function(prediction) {
-      // var li = document.createElement('li');
-      // li.appendChild(document.createTextNode(prediction.description));
-      // document.getElementById('showInput').appendChild(li);
       getall = getall + '<br />' +  prediction.description;
     });
     setShowmessage(getall);
   };
 
   var service = new google.maps.places.AutocompleteService();
-  var myLatLng = new google.maps.LatLng({lat: 31.202, lng: 121.587}); //zhangjianggaoke
+  var myLatLng = new google.maps.LatLng({lat: 31.230416, lng: 121.473701}); //zhangjianggaoke
+  // var myLatLng = new google.maps.LatLng({lat: 31.202, lng: 121.587}); //zhangjianggaoke
   // var myLatLng = new google.maps.LatLng({lat: 31.52, lng: 117.17}); //hefei
   // var myLatLng = new google.maps.LatLng({lat: 28.47, lng: 117.97}); //shangrao
   var searchObj = {
     input: suggestMsg,
-    componentRestrictions: countryLimited,  //限制国家
+    // componentRestrictions: countryLimited,  //限制国家
     location: myLatLng,                      
-    radius: 500,
+    radius: 5000,
     // types: ["establishment"]
     // types: ["geocode"]
     // types: ['(cities)']
@@ -302,13 +377,25 @@ function changeInput3() {
     //mapInit_AutocompleteService(document.getElementById('searchInput3').value);
   mapInit_AutocompleteService2(document.getElementById('searchInput3').value);
   }
-  
-
 }
 
+function ShowTheObject(obj){  
+    var des = "";  
+        for(var name in obj){  
+        des += name + ":" + obj[name] + ";";  
+         }  
+    console.log("Clay:: object --> " + des);
+} 
 
+function setShowmessage(msg) {
+  // body...
+  messageShow.innerHTML = msg;
+}
 
-
+function addShowmessage(msg) {
+  // body...
+  messageShow.innerHTML = messageShow.innerHTML + '<br />' + msg;
+}
 
 
 
