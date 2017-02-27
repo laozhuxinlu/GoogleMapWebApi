@@ -1,5 +1,7 @@
 https://developers.google.com/places/supported_types?hl=zh-cn
 
+https://developers.google.com/places/supported_types
+
 accounting
 airport
 amusement_park

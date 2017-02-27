@@ -169,6 +169,8 @@ function bodyInit() {
 	messageShow = document.getElementById("showInput");
 	mapInit_Autocomplete();
   mapInit_SearchBox();
+
+  inputInit();
 }
 
 
@@ -397,6 +399,39 @@ function addShowmessage(msg) {
   messageShow.innerHTML = messageShow.innerHTML + '<br />' + msg;
 }
 
+//文本搜索请求
+//https://developers.google.com/maps/documentation/javascript/places?hl=zh-cn#place_searches
+var input4Server;
+function inputInit() {
+  // body...
+  input4Server = new google.maps.places.PlacesService(map);
+}
+
+function changeInput4() {
+  // body...
+  var myQuery = document.getElementById('searchInput4');
+  var pyrmont = new google.maps.LatLng(31.202,121.587);
+  var request = {
+      location: pyrmont,  
+      radius: '500',
+      types: ['food'],
+      query: myQuery.value
+  }
+  input4Server.textSearch(request, input4CB);
+}
+
+function input4CB(results, status) {
+  // body...
+  var abc = document.getElementById('getMessage');
+  abc.innerHTML = '';
+  if (status == google.maps.places.PlacesServiceStatus.OK){
+    for (var i = 0; i < results.length; i++){
+      var place = results[i];
+      //ShowTheObject(place);
+      abc.innerHTML = abc.innerHTML + '<br />' + place.name;
+    }
+  }
+}
 
 
 
