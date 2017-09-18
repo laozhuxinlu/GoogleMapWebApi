@@ -1,0 +1,13 @@
+基础控件： https://developers.google.com/maps/documentation/javascript/controls?hl=zh-cn
+
+标记Marker： https://developers.google.com/maps/documentation/javascript/markers?hl=zh-cn
+
+polygon多边形处理（选中/画多边形/阴影）：
+https://developers.google.com/maps/documentat                                                                                                                                                                              ion/javascript/examples/polygon-hole
+https://developers.google.com/maps/documentation/javascript/examples/polygon-simple
+
+
+Geometry 长度/面积计算： https://developers.google.com/maps/documentation/javascript/geometry?hl=zh-cn
+Polyline 画线： https://developers.google.com/maps/documentation/javascript/examples/polyline-simple?hl=zh-cn
+
+
